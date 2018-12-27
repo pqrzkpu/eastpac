@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\User;
 use App\SiteConfig;
 use Validator;
+
+use Spatie\Permission\Models\Permission;
 
 class AdministratorController extends Controller
 {
@@ -13,8 +16,16 @@ class AdministratorController extends Controller
     public function manageUser()
     {
         $title = 'Manage User';
+        $users =  User::paginate(20);
 
-        return view('admin.usermanage', compact('title'));
+        return view('admin.manageuser.index', compact('title', 'users'));
+    }
+
+    public function manageUserShow($id)
+    {
+        $title = "Detail user";
+        $user = User::find($id);
+        return view('admin.manageuser.show', compact('title','user'));
     }
 
     public function configIndex()
@@ -67,6 +78,42 @@ class AdministratorController extends Controller
 
         return response()->json($result);
 
+    }
+
+    public function addPermissionTo($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'permission_id' => 'required'
+        ]);
+
+        if($validator->fails()) {
+
+            $result = [
+                'msg' => 'Failed give permission'
+            ];
+
+            $status = 500;
+
+        } else {
+            if(User::find($id)->hasPermissionTo(Permission::find($request->permission_id)->id)) {
+                $result = [
+                    'msg' => 'Permission allready use '.str_replace('-', ' ', Permission::find($request->permission_id)->name)
+                ];
+
+                $status = 500;
+            } else {
+                User::find($id)->givePermissionTo(Permission::find($request->permission_id)->name);
+                $result = [
+                    'msg' => 'Success give permission'
+                ];
+
+                $status = 200;
+            }
+
+
+        }
+
+        return response()->json($result, $status);
     }
 
     protected function getConfigValue($key)

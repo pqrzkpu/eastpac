@@ -29,21 +29,28 @@ Route::get('/about', function () {
 })->name('about');
 
 
-Auth::routes();
+// Auth::routes();
 
 // after
 Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
+// member
 Route::middleware(['auth', 'verified'])->prefix('setting')->group(function() {
     Route::get('profile','ProfileController@index')->name('profileIndex');
     Route::post('profile/full-name-save-edit', 'ProfileController@update')->name('profileUpdate');
     Route::post('profile/change-password-save', 'ProfileController@updatePassword')->name('profileUpdatePassword');
 });
 
+// administrator
 Route::middleware(['auth','role:administrator'])->prefix('administrator')->group(function() {
+    // manage user
     Route::get('/manage-user', 'AdministratorController@manageUser')->name('admin.usermanage');
+    Route::get('/manage-user/show/{id}', 'AdministratorController@manageUserShow')->name('admin.usermanage.show');
+    Route::post('/manage-user/add-permission-to/{id}', 'AdministratorController@addPermissionTo')->name('admin.usermanage.addPermissionTo');
+
+    // site config
     Route::get('/site-config', 'AdministratorController@configIndex')->name('admin.config.index');
     Route::post('/site-config/save-edit-config', 'AdministratorController@updateConfigValue')->name('admin.config.update');
 });

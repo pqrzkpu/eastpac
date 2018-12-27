@@ -158,7 +158,6 @@
                         $('#contact-email-config').text($('#contact-email-config-input input').val());
                         $('#contact-email-config-input').hide();
                         $('#contact-email-config').show();
-
                     }
                 })
             });

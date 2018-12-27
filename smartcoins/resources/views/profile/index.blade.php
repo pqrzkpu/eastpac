@@ -30,11 +30,11 @@
                     </div>
 
                     <div class="box-body box-profile">
-                        <img class="profile-user-img img-responsive img-circle" src="{{asset('dist/img/user2-160x160.jpg')}}" alt="User profile picture">
+                        <img class="profile-user-img img-responsive img-circle change-profile-photo" src="{{asset('dist/img/default-avatar.png')}}" alt="User profile picture">
                         <br>
 
                         <div class="text-muted text-center">
-                            <input type="file">
+                            <input type="file" name="photo_upload">
                         </div>
 
                         <ul class="list-group list-group-unbordered">
@@ -59,7 +59,7 @@
 
                         <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
-                            <b>Verifikasi</b> <a class="pull-right" style="color:green">Terverifikasi <i class="fa fa-check"></i></a>
+                            <b>Verifikasi</b> <a class="btn btn-xs btn-success pull-right">Terverifikasi <i class="fa fa-check"></i></a> </a>
                         </li>
                         <li class="list-group-item">
                             <b class="text-full-name">Full Name</b> <a class="pull-right" id="full-name" onclick="showInputFullname()">{{ Auth::user()->name }}</a>
@@ -187,6 +187,25 @@
             $('.password-input').show();
             $('#password-input input').focus();
         }
+
+        $('input[name=photo_upload]').change(function() {
+            var input = this;
+            var url = $(this).val();
+            var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+            if (input.files && input.files[0]&& (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg"))
+            {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('.change-profile-photo').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else
+            {
+                $('.change-profile-photo').attr('src', '{{asset('dist/img/default-avatar.png')}}');
+            }
+        });
 
     </script>
 @endsection
