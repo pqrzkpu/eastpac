@@ -42,3 +42,9 @@ Route::middleware(['auth', 'verified'])->prefix('setting')->group(function() {
     Route::post('profile/change-password-save', 'ProfileController@updatePassword')->name('profileUpdatePassword');
 });
 
+Route::middleware(['auth','role:administrator'])->prefix('administrator')->group(function() {
+    Route::get('/manage-user', 'AdministratorController@manageUser')->name('admin.usermanage');
+    Route::get('/site-config', 'AdministratorController@configIndex')->name('admin.config.index');
+    Route::post('/site-config/save-edit-config', 'AdministratorController@updateConfigValue')->name('admin.config.update');
+});
+

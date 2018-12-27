@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>EasternStar</title>
+<title>{{ App\SiteConfig::where('key', 'SITE_TITLE')->first()->value }}</title>
 <link href="{{asset('landingpage/css/bootstrap.css')}}" rel="stylesheet" type="text/css"/>
 <link href="{{asset('landingpage/css/font-awesome')}}.min.css" rel="stylesheet" type="text/css"/>
 <link href="{{asset('landingpage/css/slick.css')}}" rel="stylesheet" type="text/css"/>

@@ -28,13 +28,13 @@
         <li class="header">MAIN NAVIGATION</li>
         <li class="treeview">
             <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+            <i class="fa fa-bar-chart-o"></i> <span>Dashboard</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
             </span>
             </a>
             <ul class="treeview-menu">
-            <li><a href="{{ route('home') }}"><i class="fa fa-circle-o"></i> Dashboard</a></li>
+            <li><a href="{{ route('home') }}"><i class="fa fa-circle-o"></i> Marketplace</a></li>
             </ul>
         </li>
         <li>
@@ -56,7 +56,21 @@
             </span>
             </a>
         </li>
-        <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
+        @role('administrator')
+            <li class="treeview">
+                <a href="#">
+                <i class="fa fa-key"></i> <span>Admin</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                </a>
+                <ul class="treeview-menu">
+                <li class=""><a href="{{ route('admin.usermanage') }}"><i class="fa fa-circle-o"></i> Manage User</a></li>
+                </ul>
+            </li>
+            <li><a href="{{route('admin.config.index')}}"><i class="fa fa-gears"></i> <span>Site Config</span></a></li>
+        @endrole
+
         </ul>
     </section>
     <!-- /.sidebar -->

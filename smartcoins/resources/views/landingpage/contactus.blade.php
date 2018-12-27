@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>EasternStar</title>
+<title>{{ App\SiteConfig::config('SITE_TITLE') }}</title>
 <link href="{{asset('landingpage/css/bootstrap.css')}}" rel="stylesheet" type="text/css"/>
 <link href="{{asset('landingpage/css/font-awesome')}}.min.css" rel="stylesheet" type="text/css"/>
 <link href="{{asset('landingpage/css/slick.css')}}" rel="stylesheet" type="text/css"/>
@@ -36,9 +36,9 @@
               <div class="col-sm-5">
                 <h2 class="text-start" style="padding: 10px;">CONTACT US</h2>
                 <p style="padding: 10px;">Contact us and we'll get back to you within 24 hours.</p>
-                <p><span class="glyphicon glyphicon-map-marker" style="padding: 5px;"></span> Jl Kertanegara No. 65 Jakarta Selatan</p>
-                <p><span class="glyphicon glyphicon-phone"  style="padding: 5px;"></span> +00 1515151515</p>
-                <p><span class="glyphicon glyphicon-envelope"   style="padding: 5px;"></span> myemail@something.com</p>
+                <p><span class="glyphicon glyphicon-map-marker" style="padding: 5px;"></span> {{App\SiteConfig::config('CONTACT_ADDRESS')}}</p>
+                <p><span class="glyphicon glyphicon-phone"  style="padding: 5px;"></span> {{App\SiteConfig::config('CONTACT_PHONE_NUMBER')}}</p>
+                <p><span class="glyphicon glyphicon-envelope"   style="padding: 5px;"></span> {{App\SiteConfig::config('CONTACT_EMAIL')}}</p>
             </div>
             <div class="col-sm-7">
                     <div class="row">

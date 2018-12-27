@@ -18,19 +18,49 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-md-4">
+            {{-- <div class="col-md-3"></div> --}}
+            <div class="col-md-3">
                 <div id="msg" class="alert text-center" style="display:none">
                     <strong></strong>
                 </div>
                 <div class="box box-primary">
+                    <div class="box-header with-border">
+
+                        <h3 class="box-title">Photo Profile</h3>
+                    </div>
+
                     <div class="box-body box-profile">
                         <img class="profile-user-img img-responsive img-circle" src="{{asset('dist/img/user2-160x160.jpg')}}" alt="User profile picture">
+                        <br>
 
-                        <h3 class="profile-username text-center text-full-name">{{ Auth::user()->name }}</h3>
+                        <div class="text-muted text-center">
+                            <input type="file">
+                        </div>
+
+                        <ul class="list-group list-group-unbordered">
+
+                        </ul>
+                        <div class="btn btn-sm btn-primary btn-flat">Submit</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="msg" class="alert text-center" style="display:none">
+                    <strong></strong>
+                </div>
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+
+                        <h3 class="box-title">Profile</h3>
+                    </div>
+                    <div class="box-body box-profile">
 
                         <p class="text-muted text-center"></p>
 
                         <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Verifikasi</b> <a class="pull-right" style="color:green">Terverifikasi <i class="fa fa-check"></i></a>
+                        </li>
                         <li class="list-group-item">
                             <b class="text-full-name">Full Name</b> <a class="pull-right" id="full-name" onclick="showInputFullname()">{{ Auth::user()->name }}</a>
                             <div class="input-group input-group-sm" id="full-name-input" style="display:none">
