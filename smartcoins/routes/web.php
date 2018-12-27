@@ -48,6 +48,7 @@ Route::middleware(['auth','role:administrator'])->prefix('administrator')->group
     // manage user
     Route::get('/manage-user', 'AdministratorController@manageUser')->name('admin.usermanage');
     Route::get('/manage-user/show/{id}', 'AdministratorController@manageUserShow')->name('admin.usermanage.show');
+    Route::post('/manage-user/add-permission-to/{id}', 'AdministratorController@addPermissionTo')->name('admin.usermanage.addPermissionTo');
 
     // site config
     Route::get('/site-config', 'AdministratorController@configIndex')->name('admin.config.index');

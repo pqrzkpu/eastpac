@@ -20,6 +20,9 @@
     <section class="content">
         <div class="row">
             <div class="col-md-6">
+                <div id="msg" class="alert text-center" style="display:none">
+                    <strong></strong>
+                </div>
                 <div class="box">
                     <div class="box-header with-border">
                     <h3 class="box-title">User Info</h3>
@@ -52,22 +55,6 @@
                     <!-- /.box-header -->
                     <div class="box-body box-profile">
                         <div class="col-md-12">
-                            {{-- <ul class="list-group list-group-unbordered">
-                                <li class="list-group-item">
-                                    <b>Role</b>
-                                    <a class="pull-right" id="fullname">
-                                        @foreach ($user->getRoleNames() as $role)
-                                            {{ $role .", " }}
-                                        @endforeach
-                                    </a>
-                                </li>
-                                <li class="list-group-item">
-                                    <b>Permissions</b> <a class="pull-right" id="username">{{$user->username}}</a>
-                                </li>
-                                <li class="list-group-item">
-                                    <b>Email</b> <a class="pull-right" id="email">{{$user->email}}</a>
-                                </li>
-                            </ul> --}}
                             <table class="table table-bordered">
                                 <tr>
                                     <th style="width: 10px">#</th>
@@ -94,7 +81,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="permission-table">
                                 <tr>
                                     <th style="width: 10px">#</th>
                                     <th>Permission</th>
@@ -103,20 +90,38 @@
                                 @php
                                     $no = 1;
                                 @endphp
-                                @foreach($user->getAllPermissions() as $role)
+                                @foreach($user->getAllPermissions() as $permission)
                                 <tr>
-                                    <td>{{ $no++ }}</td>
-                                    <td>{{ $role }}</td>
+                                    <td> <i class="fa fa-circle-o" style="color:green;"></i> </td>
+                                    <td>{{ $permission->name }}</td>
                                     <td>
                                         <button class="btn btn-xs btn-danger" title="remove permission"> <i class="fa fa-times"></i> </button>
                                     </td>
                                 </tr>
                                 @endforeach
+                                <tr id="new-permission">
+
+                                </tr>
                                 <tr>
                                     <td></td>
-                                    <td><b>  Add permission </b></td>
                                     <td>
-                                        <button class="btn btn-xs btn-success" title="remove permission"> <i class="fa fa-plus"></i></button>
+                                        <b>  Add permission </b>
+                                        <div class="" id="add-permission" style="display:none">
+                                            <select class="form-control" id="permission-select">
+                                                <option>-Select permission-</option>
+                                                @foreach(Spatie\Permission\Models\Permission::all() as $permissions)
+
+                                                    <option value="{{$permissions->id}}|{{$permissions->name}}">{{$permissions->name}}</option>
+
+                                                @endforeach
+                                            </select>
+                                            <br>
+                                            <button type="submit" class="btn btn-success btn-sm" id="btnok-add-permission">add</button>
+                                            <button type="submit" class="btn btn-danger btn-sm" id="btncancel-add-permission">Cancel</button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-xs btn-success" title="remove permission" id="btn-add-permission"> <i class="fa fa-plus"></i></button>
                                     </td>
                                 </tr>
                             </table>
@@ -138,7 +143,59 @@
 @section('script')
 
 <script>
-    $('.pagination').addClass('pagination-sm no-margin pull-right');
+    var temp_permission = [
+        @foreach($user->getAllPermissions() as $userPermission)
+            {!!"'".$permissions->name."',"!!}
+        @endforeach
+    ];
+    $('#btn-add-permission').click(function() {
+        $(this).hide();
+        $('#add-permission').show();
+    });
+
+    $('#btncancel-add-permission').click(function() {
+        $('#btn-add-permission').show();
+        $('#add-permission').hide();
+    });
+
+    $('#btnok-add-permission').click(function() {
+        if(!temp_permission.includes($('#permission-select').val())) {
+
+
+            $.ajax({
+                url: '/administrator/manage-user/add-permission-to/{{$user->id}}',
+                type: 'post',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    permission_id: $('#permission-select').val().split('|')[0]
+                },
+                error: function(datas, status, c) {
+                    $('#msg').addClass('alert-danger');
+                    $('#msg').removeClass('alert-success');
+                    $('#msg strong').text(datas.responseJSON.msg);
+                    $('#msg').show();
+                },
+                success: function(datas, status,c) {
+                    $('#msg').removeClass('alert-danger');
+                    $('#msg').addClass('alert-success');
+                    $('#msg strong').text(datas.msg);
+                    $('#msg').show();
+                    $('#btn-add-permission').show();
+                    $('#add-permission').hide();
+                    temp_permission.push($('#permission-select').val())
+                    $('#new-permission').before(`
+                        <tr>
+                            <td> <i class="fa fa-circle-o" style="color:green;"></i> </td>
+                            <td>${$('#permission-select').val().split('|')[1]}</td>
+                            <td><button class="btn btn-xs btn-danger" title="remove permission"> <i class="fa fa-times"></i> </button></td>
+                        </tr>
+                    `)
+
+                }
+            })
+        }
+    });
+
 </script>
 
 @endsection
