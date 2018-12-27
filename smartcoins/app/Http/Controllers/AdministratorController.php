@@ -13,8 +13,16 @@ class AdministratorController extends Controller
     public function manageUser()
     {
         $title = 'Manage User';
+        $users =  User::paginate(20);
 
-        return view('admin.usermanage', compact('title'));
+        return view('admin.manageuser.index', compact('title', 'users'));
+    }
+
+    public function manageUserShow($id)
+    {
+        $title = "Detail user";
+        $user = User::find($id);
+        return view('admin.manageuser.show', compact('title','user'));
     }
 
     public function configIndex()
