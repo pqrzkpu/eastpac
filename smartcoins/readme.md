@@ -9,7 +9,7 @@
 ## 2. configuration file .env
 ### database config :
 ```
-DB_DATABASE=firstapp
+DB_DATABASE=smart_coin
 DB_USERNAME=root
 DB_PASSWORD=root
 ```
