@@ -89,7 +89,14 @@
                             </div>
                         </li>
                         <li class="list-group-item">
-                            <b>Ethereum address</b> <a class="pull-right" id="ethereum-address-config">26318283772283</a>
+                            <b>Ethereum address</b> <a class="pull-right" id="ethereum-address-config" onclick="showEthereumAddressConfig()">{{ $eth_address }}</a>
+                            <div class="input-group input-group-sm" id="ethereum-address-config-input" style="display:none">
+                                <input type="text" class="form-control" key="ethereum-address" placeholder="Ethereum address" value="{{ $eth_address }}">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-success btn-flat" id="btnok-ethereum-address"><i class="fa fa-check"></i></button>
+                                    <button type="button" class="btn btn-danger btn-flat" id="btncancel-ethereum-address"><i class="fa fa-times"></i></button>
+                                </span>
+                            </div>
                         </li>
                         </ul>
                     </div>
@@ -218,6 +225,34 @@
                 })
             });
 
+            $('#btnok-ethereum-address').click(function() {
+                $.ajax({
+                    url: '/administrator/site-config/save-edit-config',
+                    type: 'post',
+                    data: {
+                        _token: '{{csrf_token()}}',
+                        val: $('#ethereum-address-config-input input').val(),
+                        key: $('#ethereum-address-config-input input').attr('key')
+                    },
+                    error: function(datas, status, c) {
+                        $('#msg').addClass('alert-danger');
+                        $('#msg').removeClass('alert-success');
+                        $('#msg strong').text(datas.responseJSON.msg);
+                        $('#msg').show();
+                    },
+                    success: function(datas, status,c) {
+                        $('#msg').removeClass('alert-danger');
+                        $('#msg').addClass('alert-success');
+                        $('#msg strong').text(datas.msg);
+                        $('#msg').show();
+                        $('#ethereum-address-config').text($('#ethereum-address-config-input input').val());
+                        $('#ethereum-address-config-input').hide();
+                        $('#ethereum-address-config').show();
+
+                    }
+                })
+            });
+
 
 
 
@@ -279,6 +314,11 @@
             $('#contact-phone-number-config').show();
         });
 
+        $('#btncancel-ethereum-address').click(function(){
+            $('#ethereum-address-config-input').hide();
+            $('#ethereum-address-config').show();
+        });
+
 
         // show onclick label :
 
@@ -312,12 +352,18 @@
             $('#contact-phone-number-config-input input').focus();
         }
 
+        function showEthereumAddressConfig() {
+            $('#ethereum-address-config').hide();
+            $('#ethereum-address-config-input').show();
+            $('#ethereum-address-config-input input').focus();
+        }
+
         // function showInputPassword() {
         //     $('#password').hide();
         //     $('.password-input').show();
         //     $('#password-input input').focus();
         // }
-        $('#ethereum-address-config').text(btoa('Lorem ipsum dolor sit amet consectetur'))
+        // $('#ethereum-address-config').text(btoa('Lorem ipsum dolor sit amet consectetur'))
 
     </script>
 
