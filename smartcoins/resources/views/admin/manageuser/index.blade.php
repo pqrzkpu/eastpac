@@ -31,6 +31,7 @@
                             <th>Name</th>
                             <th>Username</th>
                             <th>Email</th>
+                            <th>Verified</th>
                             <th style="width: 100px">Action</th>
                         </tr>
                         @php
@@ -42,6 +43,13 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->username }}</td>
                             <td>{{ $user->email }}</td>
+                            <th>
+                                @if(is_null($user->email_verified_at))
+                                    <i class="fa fa-ban" style="color:red"></i>
+                                @else
+                                    <i class="fa fa-check" style="color:green"></i>
+                                @endif
+                            </th>
                             <td>
                                 <a href="{{ route('admin.usermanage.show', $user->id) }}" class="btn btn-sm btn-primary" title="view detail"> <i class="fa fa-eye"></i> </a>
                                 <button class="btn btn-sm btn-danger" title="ban user"> <i class="fa fa-ban"></i> </button>

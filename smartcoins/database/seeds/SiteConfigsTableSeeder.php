@@ -55,7 +55,7 @@ class SiteConfigsTableSeeder extends Seeder
             ),
             4 =>
             array (
-                'id' => 4,
+                'id' => 5,
                 'key' => 'ETHEREUM_ADDRESS',
                 'value' => 'http://localhost:5000',
                 'type' => 'string',
