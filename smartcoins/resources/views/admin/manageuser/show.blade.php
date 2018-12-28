@@ -5,9 +5,7 @@
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>
-        {{ $title }}
-        </h1>
+        <a href="{{ route('admin.usermanage') }}" class="btn btn-sm btn-default" style="font-weight:bold"><i class="fa fa-angle-left"></i> Back</a>
         <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
         <li><a href="#">admin</a></li>
@@ -20,12 +18,17 @@
     <section class="content">
         <div class="row">
             <div class="col-md-6">
+                @if(session('msg'))
+                    <div id="msg" class="alert text-center" style="display:none">
+                        <strong>{{session('msg')}}</strong>
+                    </div>
+                @endif
                 <div id="msg" class="alert text-center" style="display:none">
                     <strong></strong>
                 </div>
                 <div class="box">
                     <div class="box-header with-border">
-                    <h3 class="box-title">User Info</h3>
+                    <h3 class="box-title">{{ $title }}</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body box-profile">
@@ -66,18 +69,36 @@
                                 @endphp
                                 @foreach($user->getRoleNames() as $role)
                                 <tr>
-                                    <td>{{ $no++ }}</td>
+                                    <td><i class="fa fa-circle-o" style="color:green;"></i></td>
                                     <td>{{ $role }}</td>
                                     <td>
-                                        <button class="btn btn-xs btn-danger" title="remove role"> <i class="fa fa-times"></i> </button>
+                                        <a href="{{ route('admin.usermanage.removeRole', [$user->id, $role]) }}" class="btn btn-xs btn-danger" title="remove role"> <i class="fa fa-times"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach
+                                <tr id="new-role">
+
+                                </tr>
                                 <tr>
                                     <td></td>
-                                    <td><b> Add Role </b></td>
                                     <td>
-                                        <button class="btn btn-xs btn-success" title="remove permission"> <i class="fa fa-plus"></i></button>
+                                        <b> Add Role </b>
+                                        <div class="" id="add-role" style="display:none">
+                                            <select class="form-control" id="role-select">
+                                                <option value="0">-Select role-</option>
+                                                @foreach(Spatie\Permission\Models\Role::all() as $roles)
+
+                                                    <option value="{{$roles->id}}|{{$roles->name}}">{{$roles->name}}</option>
+
+                                                @endforeach
+                                            </select>
+                                            <br>
+                                            <button type="submit" class="btn btn-success btn-sm" id="btnok-add-role">add</button>
+                                            <button type="submit" class="btn btn-danger btn-sm" id="btncancel-add-role">Cancel</button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-xs btn-success" id="btn-add-role" title="remove role"> <i class="fa fa-plus"></i></button>
                                     </td>
                                 </tr>
                             </table>
@@ -95,7 +116,7 @@
                                     <td> <i class="fa fa-circle-o" style="color:green;"></i> </td>
                                     <td>{{ $permission->name }}</td>
                                     <td>
-                                        <button class="btn btn-xs btn-danger" title="remove permission"> <i class="fa fa-times"></i> </button>
+                                        <a href="{{ route('admin.usermanage.removePermission', [$user->id, $permission->name]) }}" class="btn btn-xs btn-danger" title="remove permission"> <i class="fa fa-times"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -108,7 +129,7 @@
                                         <b>  Add permission </b>
                                         <div class="" id="add-permission" style="display:none">
                                             <select class="form-control" id="permission-select">
-                                                <option>-Select permission-</option>
+                                                <option value="0">-Select permission-</option>
                                                 @foreach(Spatie\Permission\Models\Permission::all() as $permissions)
 
                                                     <option value="{{$permissions->id}}|{{$permissions->name}}">{{$permissions->name}}</option>
@@ -121,7 +142,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <button class="btn btn-xs btn-success" title="remove permission" id="btn-add-permission"> <i class="fa fa-plus"></i></button>
+                                        <button class="btn btn-xs btn-success" title="add permission" id="btn-add-permission"> <i class="fa fa-plus"></i></button>
                                     </td>
                                 </tr>
                             </table>
@@ -144,10 +165,13 @@
 
 <script>
     var temp_permission = [
-        @foreach($user->getAllPermissions() as $userPermission)
+        @foreach($user->getAllPermissions() as $permissions)
             {!!"'".$permissions->name."',"!!}
         @endforeach
     ];
+
+    var temp_role = {!!$user->getRoleNames()!!};
+
     $('#btn-add-permission').click(function() {
         $(this).hide();
         $('#add-permission').show();
@@ -158,9 +182,18 @@
         $('#add-permission').hide();
     });
 
+    $('#btncancel-add-role').click(function() {
+        $('#btn-add-role').show();
+        $('#add-role').hide();
+    });
+
+    $('#btn-add-role').click(function() {
+        $(this).hide();
+        $('#add-role').show();
+    });
+
     $('#btnok-add-permission').click(function() {
         if(!temp_permission.includes($('#permission-select').val())) {
-
 
             $.ajax({
                 url: '/administrator/manage-user/add-permission-to/{{$user->id}}',
@@ -188,6 +221,44 @@
                             <td> <i class="fa fa-circle-o" style="color:green;"></i> </td>
                             <td>${$('#permission-select').val().split('|')[1]}</td>
                             <td><button class="btn btn-xs btn-danger" title="remove permission"> <i class="fa fa-times"></i> </button></td>
+                        </tr>
+                    `)
+
+                }
+            })
+        }
+    });
+
+    $('#btnok-add-role').click(function() {
+        if(!temp_role.includes($('#role-select').val())) {
+            $.ajax({
+                url: '/administrator/manage-user/add-role-to/{{$user->id}}',
+                type: 'post',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    role_id: $('#role-select').val().split('|')[0]
+                },
+                error: function(datas, status, c) {
+                    $('#msg').addClass('alert-danger');
+                    $('#msg').removeClass('alert-success');
+                    $('#msg strong').text(datas.responseJSON.msg);
+                    $('#msg').show();
+                },
+                success: function(datas, status,c) {
+                    $('#msg').removeClass('alert-danger');
+                    $('#msg').addClass('alert-success');
+                    $('#msg strong').text(datas.msg);
+                    $('#msg').show();
+                    $('#btn-add-role').show();
+                    $('#add-role').hide();
+                    temp_role.push($('#role-select').val())
+                    $('#new-role').before(`
+                        <tr>
+                            <td> <i class="fa fa-circle-o" style="color:green;"></i> </td>
+                            <td>${$('#role-select').val().split('|')[1]}</td>
+                            <td>
+                                <a href="http://${window.location.host}/administrator/manage-user/remove-role-from/{{$user->id}}/${$('#role-select').val().split('|')[1]}" class="btn btn-xs btn-danger" title="remove role"> <i class="fa fa-times"></i> </a>
+                            </td>
                         </tr>
                     `)
 
