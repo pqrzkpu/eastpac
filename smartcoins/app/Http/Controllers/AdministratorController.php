@@ -36,6 +36,7 @@ class AdministratorController extends Controller
         $contact_email = $this->getConfigValue('CONTACT_EMAIL');
         $contact_address = $this->getConfigValue('CONTACT_ADDRESS');
         $contact_phone_number = $this->getConfigValue('CONTACT_PHONE_NUMBER');
+        $eth_address = $this->getConfigValue('ETHEREUM_ADDRESS');
 
 
         return view('admin.config', compact(
@@ -43,7 +44,8 @@ class AdministratorController extends Controller
                                             'site_title',
                                             'contact_email',
                                             'contact_address',
-                                            'contact_phone_number'
+                                            'contact_phone_number',
+                                            'eth_address'
                                         ));
     }
 
