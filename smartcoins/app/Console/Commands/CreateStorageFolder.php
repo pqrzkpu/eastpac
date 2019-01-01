@@ -12,7 +12,7 @@ class CreateStorageFolder extends Command
      *
      * @var string
      */
-    protected $signature = 'eastpac:create-storage-folder {disk} {pathname} ';
+    protected $signature = 'eastpac:create-storage-folder {pathname} ';
 
     /**
      * The console command description.
@@ -43,7 +43,7 @@ class CreateStorageFolder extends Command
         if (file_exists(public_path($path))) {
             return $this->error('The "public/'.$path.'" directory already exists.');
         }
-        Storage::disk($this->argument('disk'))->makeDirectory($path);
+        Storage::disk('local')->makeDirectory($path);
 
 
         $this->laravel->make('files')->link(
