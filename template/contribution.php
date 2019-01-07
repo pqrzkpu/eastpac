@@ -356,7 +356,7 @@
                             <div class="col-sm-5">
                                 <div class="tranx-info-qr">
                                     <span>OR Scan bellow QR Code to pay</span>
-                                    <img class="tranx-info-qrimg" src="dist/img/eth-qr.png" alt="qr" style="margin-left: 15%">
+                                    <img class="tranx-info-qrimg" src="dist/img/eth-qr.png" alt="qr" style="margin: auto;">
                                     <div class="gaps-4x"></div><br>
 <!--                                    <ul class="btn-grp guttar-20px">-->
                                         <button href="#" class="btn btn-primary" onclick="getPayments()">Yes, I want</button>
